@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<h2>Login</h2>
+
+<form method="post" action="{{ path('otp_request') }}">
+    <input type="email" name="email" placeholder="Enter Email" required>
+    <button type="submit">Send OTP</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,18 @@
+_pimcore:
+    resource: "@PimcoreCoreBundle/config/routing.yaml"
+
+app:
+    resource: "../src/Controller/"
+    type: annotation
+
+otp_request:
+    path: /login/request-otp
+    controller: App\Controller\AuthController::requestOtp
+
+otp_verify:
+    path: /login/verify-otp
+    controller: App\Controller\AuthController::verifyOtp
+
+login_page:
+    path: /login
+    controller: App\Controller\AuthController::loginPage

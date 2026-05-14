@@ -1,0 +1,39 @@
+pimcore:
+    general:
+        domain: ''
+        redirect_to_maindomain: false
+        valid_languages:
+            - en
+            - de
+            - fr
+        fallback_languages:
+            en: ''
+            de: ''
+            fr: ''
+        required_languages:
+            - en
+            - de
+            - fr
+        default_language: en
+        debug_admin_translations: false
+    documents:
+        versions:
+            days: null
+            steps: null
+        error_pages:
+            default: ''
+            localized:
+                en: ''
+                de: ''
+                fr: ''
+    objects:
+        versions:
+            days: null
+            steps: null
+    assets:
+        versions:
+            days: null
+            steps: null
+    email:
+        debug:
+            email_addresses: ashwini.dhomse@embitel.com
