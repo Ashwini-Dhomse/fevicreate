@@ -49,6 +49,30 @@ services:
         public: true
         tags: [ 'controller.service_arguments' ]
     
+    App\Service\:
+        resource: "../src/Service/*"
+        autowire: true
+        autoconfigure: true
+    
+    App\Repository\:
+        resource: "../src/Repository/*"
+        autowire: true
+        autoconfigure: true
+
+    App\Transformer\:
+        resource: "../src/Transformer/*"
+        autowire: true
+        autoconfigure: true
+
+    App\DTO\:
+        resource: "../src/DTO/*"
+        autowire: true
+        autoconfigure: true
+
+    App\EventListener\AuthListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
     App\Library\EmailLibrary:
         arguments:
             $twig: '@twig'
