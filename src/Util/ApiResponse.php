@@ -6,34 +6,31 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiResponse
 {
-
     public static function success(
-        mixed $data = [],
+        $data = null,
         string $message = 'Success',
-        array $meta = [],
-        int $status = 200
+        int $status = 200,
+        array $meta = []
     ): JsonResponse {
+
         return new JsonResponse([
             'success' => true,
             'message' => $message,
-            'data'    => $data,
-            'errors'  => [],
-            'meta'    => $meta
+            'data' => $data,
+            'meta' => $meta
         ], $status);
     }
 
     public static function error(
-        string $message,
+        string $message = 'Error',
         array $errors = [],
-        int $status = 400,
-        mixed $data = null
+        int $status = 400
     ): JsonResponse {
+
         return new JsonResponse([
             'success' => false,
             'message' => $message,
-            'data'    => $data,
-            'errors'  => $errors,
-            'meta'    => []
+            'errors' => $errors
         ], $status);
     }
 }

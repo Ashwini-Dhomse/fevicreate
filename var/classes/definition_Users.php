@@ -52,11 +52,11 @@
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'dao' => NULL,
    'id' => '5',
-   'name' => 'users',
+   'name' => 'Users',
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1771939774,
+   'modificationDate' => 1779710200,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
