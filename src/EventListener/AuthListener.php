@@ -2,11 +2,11 @@
 
 namespace App\EventListener;
 
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Service\TokenAuthService;
 use App\Attribute\RequireAuth;
+use App\Service\TokenAuthService;
 use ReflectionMethod;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class AuthListener
 {
@@ -37,11 +37,11 @@ class AuthListener
             }
             $controller = explode('::', $controller);
         }
-    
+
         if (!is_array($controller) || count($controller) !== 2) {
             return;
         }
-    
+
         try {
             $reflection = new ReflectionMethod($controller[0], $controller[1]);
         } catch (\ReflectionException $e) {
@@ -63,6 +63,7 @@ class AuthListener
                 'success' => false,
                 'message' => 'Unauthorized'
             ], 401));
+
             return;
         }
 

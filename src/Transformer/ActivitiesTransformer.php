@@ -3,11 +3,9 @@
 namespace App\Transformer;
 
 use Pimcore\Model\DataObject\Activities;
-use App\Transformer\AssetTransformer;
 
 class ActivitiesTransformer
 {
-
     /**
      * For Listing API
      */

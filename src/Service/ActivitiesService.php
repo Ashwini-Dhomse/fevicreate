@@ -10,11 +10,10 @@ class ActivitiesService
     public function __construct(
         private ActivitiesRepository $repository,
         private ActivitiesTransformer $transformer
-    )
-    {
+    ) {
     }
 
-    public function getActivitiesList(int $page = 1,int $limit = 10) : array
+    public function getActivitiesList(int $page = 1, int $limit = 10): array
     {
 
         $activities = $this->repository->getList();

@@ -6,8 +6,8 @@ use Pimcore\Model\DataObject\Activities;
 
 class ActivitiesRepository
 {
-
-    public function getList($page = 1, $limit = 10) {
+    public function getList($page = 1, $limit = 10)
+    {
 
         $list = new Activities\Listing;
 

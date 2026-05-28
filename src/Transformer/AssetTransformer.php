@@ -6,7 +6,6 @@ use Pimcore\Model\Asset;
 
 class AssetTransformer
 {
-
     /**
      * Transform single asset
      */
