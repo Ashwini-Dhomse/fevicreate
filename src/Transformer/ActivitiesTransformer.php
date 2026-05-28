@@ -2,17 +2,15 @@
 
 namespace App\Transformer;
 
-use Pimcore\Model\DataObject\Activities;
-use App\Transformer\AssetTransformer;
 use App\Repository\BookmarkRepository;
+use Pimcore\Model\DataObject\Activities;
 
 class ActivitiesTransformer
 {
-
     public function __construct(
         private BookmarkRepository $bookmarkRepo
-    )
-    {}
+    ) {
+    }
 
     /**
      * For Listing API

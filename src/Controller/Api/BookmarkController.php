@@ -2,10 +2,9 @@
 
 namespace App\Controller\Api;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\BookmarkService;
 use App\Util\ApiResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/bookmarks')]
@@ -14,7 +13,8 @@ class BookmarkController extends AbstractController
 {
     public function __construct(
         private BookmarkService $service
-    ) {}
+    ) {
+    }
 
     #[Route('/{objectId}/{type}', methods: ['GET'])]
     public function add(int $objectId, string $type = 'activity')

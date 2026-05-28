@@ -3,7 +3,6 @@
 namespace App\Transformer;
 
 use Pimcore\Model\DataObject\ContestSubmission;
-use App\Transformer\AssetTransformer;
 
 class ContestSubmissionTransformer
 {

@@ -8,7 +8,8 @@ class BookmarkService
 {
     public function __construct(
         private BookmarkRepository $repo
-    ) {}
+    ) {
+    }
 
     public function add(int $userId, int $objectId, string $type): void
     {

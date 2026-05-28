@@ -7,7 +7,6 @@ use Pimcore\Model\Asset\Service;
 
 class FileUploadService
 {
-
     public function upload($file, $folderPath, $fileNamePrefix): Asset
     {
 
@@ -16,7 +15,7 @@ class FileUploadService
 
         $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
 
-        $fileName = $fileNamePrefix . time() . '_' . rand(1000,9999) . '.' . $extension;
+        $fileName = $fileNamePrefix . time() . '_' . rand(1000, 9999) . '.' . $extension;
 
         $asset = new Asset();
         $asset->setFilename($fileName);

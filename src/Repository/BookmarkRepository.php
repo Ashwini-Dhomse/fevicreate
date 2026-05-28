@@ -10,7 +10,8 @@ class BookmarkRepository
 
     public function __construct(
         private Connection $connection
-    ) {}
+    ) {
+    }
 
     /**
      * Check if bookmark exists

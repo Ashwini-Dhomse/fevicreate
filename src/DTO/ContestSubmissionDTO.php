@@ -2,8 +2,8 @@
 
 namespace App\DTO;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 
 class ContestSubmissionDTO
 {
@@ -39,34 +39,34 @@ class ContestSubmissionDTO
         $errors = [];
 
         if (empty($this->childName)) {
-            $errors[] = "Child name is required";
+            $errors[] = 'Child name is required';
         }
 
         if (empty($this->parentEmail) || !filter_var($this->parentEmail, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Valid email is required";
+            $errors[] = 'Valid email is required';
         }
 
         if (empty($this->parentPhone)) {
-            $errors[] = "Phone number is required";
+            $errors[] = 'Phone number is required';
         }
 
         if (empty($this->artworkTitle)) {
-            $errors[] = "Artwork title is required";
+            $errors[] = 'Artwork title is required';
         }
 
         if (empty($this->documents)) {
-            $errors[] = "At least one document is required";
+            $errors[] = 'At least one document is required';
         }
 
         foreach ($this->documents as $file) {
 
             if (!$file instanceof UploadedFile) {
-                $errors[] = "Invalid file upload";
+                $errors[] = 'Invalid file upload';
                 continue;
             }
 
             if ($file->getSize() > 3 * 1024 * 1024) {
-                $errors[] = "File size must be less than 3MB";
+                $errors[] = 'File size must be less than 3MB';
             }
 
             $mime = $file->getClientMimeType();

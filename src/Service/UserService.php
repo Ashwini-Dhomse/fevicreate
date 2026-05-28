@@ -3,8 +3,8 @@
 namespace App\Service;
 
 use App\DTO\UserDTO;
-use Pimcore\Model\DataObject\Users;
 use Pimcore\Model\DataObject\Folder;
+use Pimcore\Model\DataObject\Users;
 
 class UserService
 {
@@ -29,14 +29,14 @@ class UserService
         // =========================
         $list = new Users\Listing();
 
-        $list->setCondition("
+        $list->setCondition('
             mobile = ? 
             OR teachermobile = ? 
             OR POCcontactnumber = ?
             OR email = ?
             OR teacheremail = ?
             OR principalemail = ?
-        ", [
+        ', [
             $dto->mobile,
             $dto->mobile,
             $dto->mobile,
@@ -184,11 +184,11 @@ class UserService
 
         $list = new Users\Listing();
 
-        $list->setCondition("
+        $list->setCondition('
             email = ?
             OR teacheremail = ?
             OR principalemail = ?
-        ", [
+        ', [
             $email,
             $email,
             $email

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Service\OtpService;
@@ -6,8 +7,8 @@ use Pimcore\Model\DataObject\Customer; // change to your class
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Security;
 
 class AuthController extends AbstractController
 {

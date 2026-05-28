@@ -2,14 +2,14 @@
 
 namespace App\Controller\Api;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Service\ContestSubmissionService;
-use App\DTO\ContestSubmissionDTO;
-use App\Util\ApiResponse;
 use App\Attribute\RequireAuth;
+use App\DTO\ContestSubmissionDTO;
+use App\Service\ContestSubmissionService;
+use App\Util\ApiResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/contest')]
 

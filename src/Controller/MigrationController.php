@@ -2,22 +2,20 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/internal/setup')]
 class MigrationController extends AbstractController
 {
-
     #[Route('/create-tables/{table}', methods: ['GET'])]
     public function createTables(string $table, Connection $connection)
     {
 
         $schemas = [
-            'bookmarks' => "
+            'bookmarks' => '
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL,
                 object_id INT NOT NULL,
@@ -26,7 +24,7 @@ class MigrationController extends AbstractController
                 UNIQUE KEY uniq_user_object (user_id, object_id, type),
                 INDEX idx_user (user_id),
                 INDEX idx_object (object_id)
-            "
+            '
         ];
 
         if (!isset($schemas[$table])) {
