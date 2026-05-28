@@ -2,13 +2,11 @@
 
 namespace App\Repository;
 
-use Pimcore\Model\DataObject\ContestSubmission;
 use Pimcore\Model\DataObject;
+use Pimcore\Model\DataObject\ContestSubmission;
 
 class ContestSubmissionRepository
 {
-
-
     public function getFolder()
     {
         return DataObject::getByPath('/contest-submissions');

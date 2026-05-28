@@ -18,7 +18,7 @@ class TokenAuthService
         $token = str_replace('Bearer ', '', $header);
 
         $list = new Users\Listing();
-        $list->setCondition("apiToken = ?", [$token]);
+        $list->setCondition('apiToken = ?', [$token]);
         $list->setLimit(1);
 
         $users = $list->load();

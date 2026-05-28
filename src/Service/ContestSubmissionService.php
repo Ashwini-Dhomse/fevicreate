@@ -3,22 +3,20 @@
 namespace App\Service;
 
 use App\DTO\ContestSubmissionDTO;
-use Pimcore\Model\DataObject\ContestSubmission;
 use App\Repository\ContestSubmissionRepository;
-use Pimcore\Model\DataObject;
 use App\Transformer\ContestSubmissionTransformer;
+use Pimcore\Model\DataObject;
+use Pimcore\Model\DataObject\ContestSubmission;
 
 class ContestSubmissionService
 {
-
     private $repository;
     private $fileService;
 
     public function __construct(
         FileUploadService $fileService,
         ContestSubmissionRepository $repository,
-    )
-    {
+    ) {
         $this->fileService = $fileService;
         $this->repository = $repository;
     }
@@ -29,10 +27,10 @@ class ContestSubmissionService
 
         $date = date('M Y');
 
-        $contentDirectory = DataObject\Service::createFolderByPath("/Contest Submissions/". $date ."/");
+        $contentDirectory = DataObject\Service::createFolderByPath('/Contest Submissions/'. $date .'/');
         $contentDirectoryId = $contentDirectory->getId();
 
-        $objectKey = 'contest_'.$dto->artworkTitle.'_'.rand(1,999);
+        $objectKey = 'contest_'.$dto->artworkTitle.'_'.rand(1, 999);
         $object->setKey($objectKey);
         $object->setParentId($contentDirectoryId);
 
@@ -82,6 +80,6 @@ class ContestSubmissionService
             throw new \Exception('Not found');
         }
 
-        return ContestSubmissionTransformer::detail($item);;
+        return ContestSubmissionTransformer::detail($item);
     }
 }

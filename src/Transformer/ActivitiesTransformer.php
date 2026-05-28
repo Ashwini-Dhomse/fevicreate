@@ -2,21 +2,26 @@
 
 namespace App\Transformer;
 
+use App\Repository\BookmarkRepository;
 use Pimcore\Model\DataObject\Activities;
-use App\Transformer\AssetTransformer;
 
 class ActivitiesTransformer
 {
+    public function __construct(
+        private BookmarkRepository $bookmarkRepo
+    ) {
+    }
 
     /**
      * For Listing API
      */
-    public static function list(Activities $item): array
+    public function list(Activities $item): array
     {
         return [
             'id' => $item->getId(),
             'activityTitle' => $item->getActivityTitle(),
             'timeRange' => $item->getTimeRange(),
+            'isBookmarked' => $this->bookmarkRepo->exists(1, $item->getId()),
             'image' => AssetTransformer::transform($item->getImage())
         ];
     }
