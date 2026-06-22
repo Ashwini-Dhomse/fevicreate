@@ -63,6 +63,44 @@ class UserController extends AbstractController
     }
 
     /**
+     * Update User
+     */
+    #[Route('/{id}', name: 'api_user_update', methods: ['PUT'])]
+    public function update(
+        int $id,
+        Request $request
+    ): JsonResponse {
+        try {
+
+            $dto = UserDTO::fromRequest($request);
+
+            // Validate request
+            $errors = $dto->validate();
+
+            if (!empty($errors)) {
+                return ApiResponse::error(
+                    'Validation failed',
+                    $errors
+                );
+            }
+
+            // Update user
+            $data = $this->service->update($id, $dto);
+
+            return ApiResponse::success(
+                $data,
+                'User updated successfully'
+            );
+
+        } catch (\Exception $e) {
+
+            return ApiResponse::error(
+                $e->getMessage()
+            );
+        }
+    }
+
+    /**
      * Login User
      */
     #[Route('/login', name: 'api_user_login', methods: ['POST'])]

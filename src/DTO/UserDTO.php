@@ -6,21 +6,24 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserDTO
 {
-    public ?string $userType = null;
-    public ?string $mobile = null;
-    public ?string $email = null;
-    public ?string $password = null;
-
-    // Parent
-    public ?string $childfirstname = null;
-    public ?string $childlastname = null;
-
-    // Teacher
     public ?string $firstname = null;
     public ?string $lastname = null;
-
-    // School
+    public ?string $gender = null;
+    public ?string $i_am = null;
+    public ?string $mobile = null;
+    public ?string $city = null;
+    public ?string $state = null;
     public ?string $school_name = null;
+    public ?string $email = null;
+
+    public ?string $child_one_fullname = null;
+    public ?string $child_one_dob = null;
+
+    public ?string $child_two_fullname = null;
+    public ?string $child_two_dob = null;
+
+    public ?string $child_three_fullname = null;
+    public ?string $child_three_dob = null;
 
     /**
      * Create DTO from Request
@@ -31,21 +34,24 @@ class UserDTO
 
         $dto = new self();
 
-        $dto->userType = $data['userType'] ?? null;
-        $dto->mobile = $data['mobile'] ?? null;
-        $dto->email = $data['email'] ?? null;
-        $dto->password = $data['password'] ?? null;
-
-        // Parent
-        $dto->childfirstname = $data['childfirstname'] ?? null;
-        $dto->childlastname = $data['childlastname'] ?? null;
-
-        // Teacher
         $dto->firstname = $data['firstname'] ?? null;
         $dto->lastname = $data['lastname'] ?? null;
-
-        // School
+        $dto->gender = $data['gender'] ?? null;
+        $dto->i_am = $data['i_am'] ?? null;
+        $dto->mobile = $data['mobile'] ?? null;
+        $dto->city = $data['city'] ?? null;
+        $dto->state = $data['state'] ?? null;
         $dto->school_name = $data['school_name'] ?? null;
+        $dto->email = $data['email'] ?? null;
+
+        $dto->child_one_fullname = $data['child_one_fullname'] ?? null;
+        $dto->child_one_dob = $data['child_one_dob'] ?? null;
+
+        $dto->child_two_fullname = $data['child_two_fullname'] ?? null;
+        $dto->child_two_dob = $data['child_two_dob'] ?? null;
+
+        $dto->child_three_fullname = $data['child_three_fullname'] ?? null;
+        $dto->child_three_dob = $data['child_three_dob'] ?? null;
 
         return $dto;
     }
@@ -57,15 +63,25 @@ class UserDTO
     {
         $errors = [];
 
-        // =========================
-        // Common Validation
-        // =========================
-        if (empty($this->userType)) {
-            $errors[] = 'userType is required';
+        // Required Fields
+        if (empty($this->firstname)) {
+            $errors[] = 'firstname is required';
+        }
+
+        if (empty($this->lastname)) {
+            $errors[] = 'lastname is required';
         }
 
         if (empty($this->mobile)) {
             $errors[] = 'mobile is required';
+        }
+
+        if (empty($this->city)) {
+            $errors[] = 'city is required';
+        }
+
+        if (empty($this->state)) {
+            $errors[] = 'state is required';
         }
 
         if (
@@ -75,54 +91,31 @@ class UserDTO
             $errors[] = 'Valid email is required';
         }
 
-        // =========================
-        // User Type Validation
-        // =========================
+        // Gender Validation
         if (
-            !empty($this->userType) &&
-            !in_array(
-                strtolower($this->userType),
-                ['parent', 'teacher', 'school']
-            )
+            !empty($this->gender) &&
+            !in_array(strtolower($this->gender), ['male', 'female'])
         ) {
-            $errors[] = 'Invalid userType. Allowed: parent, teacher, school';
+            $errors[] = 'Invalid gender. Allowed: male, female';
         }
 
-        // =========================
+        // I Am Validation
+        if (
+            !empty($this->i_am) &&
+            !in_array(strtolower($this->i_am), ['parent', 'teacher'])
+        ) {
+            $errors[] = 'Invalid i_am. Allowed: parent, teacher';
+        }
+
         // Parent Validation
-        // =========================
-        if (strtolower($this->userType ?? '') === 'parent') {
+        if (strtolower($this->i_am ?? '') === 'parent') {
 
-            if (empty($this->childfirstname)) {
-                $errors[] = 'childfirstname is required';
+            if (empty($this->child_one_fullname)) {
+                $errors[] = 'child_one_fullname is required';
             }
 
-            if (empty($this->childlastname)) {
-                $errors[] = 'childlastname is required';
-            }
-        }
-
-        // =========================
-        // Teacher Validation
-        // =========================
-        if (strtolower($this->userType ?? '') === 'teacher') {
-
-            if (empty($this->firstname)) {
-                $errors[] = 'firstname is required';
-            }
-
-            if (empty($this->lastname)) {
-                $errors[] = 'lastname is required';
-            }
-        }
-
-        // =========================
-        // School Validation
-        // =========================
-        if (strtolower($this->userType ?? '') === 'school') {
-
-            if (empty($this->school_name)) {
-                $errors[] = 'school_name is required';
+            if (empty($this->child_one_dob)) {
+                $errors[] = 'child_one_dob is required';
             }
         }
 

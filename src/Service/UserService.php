@@ -5,6 +5,7 @@ namespace App\Service;
 use App\DTO\UserDTO;
 use Pimcore\Model\DataObject\Folder;
 use Pimcore\Model\DataObject\Users;
+use Pimcore\Model\Element\Service as ElementService;
 
 class UserService
 {
@@ -13,37 +14,32 @@ class UserService
      */
     public function create(UserDTO $dto): array
     {
-        // =========================
-        // Validate User Type
-        // =========================
-        $userType = strtolower(trim($dto->userType));
+        // Validate DTO
+        $errors = $dto->validate();
 
-        if (!in_array($userType, ['parent', 'teacher', 'school'])) {
+        if (!empty($errors)) {
+            throw new \Exception(implode(', ', $errors));
+        }
+
+        $userType = strtolower(trim($dto->i_am));
+
+        // Validate user type
+        if (!in_array($userType, ['parent', 'teacher'])) {
             throw new \Exception(
-                'Invalid userType. Allowed: parent, teacher, school'
+                'Invalid i_am. Allowed: parent, teacher'
             );
         }
 
-        // =========================
-        // Duplicate Check
-        // =========================
+        // Check duplicate email/mobile
         $list = new Users\Listing();
 
-        $list->setCondition('
-            mobile = ? 
-            OR teachermobile = ? 
-            OR POCcontactnumber = ?
-            OR email = ?
-            OR teacheremail = ?
-            OR principalemail = ?
-        ', [
-            $dto->mobile,
-            $dto->mobile,
-            $dto->mobile,
-            $dto->email,
-            $dto->email,
-            $dto->email
-        ]);
+        $list->setCondition(
+            'mobile = ? OR email = ?',
+            [
+                $dto->mobile,
+                $dto->email
+            ]
+        );
 
         $list->setLimit(1);
 
@@ -53,106 +49,144 @@ class UserService
             );
         }
 
-        // =========================
-        // Parent Folder
-        // =========================
+        // Create parent folder if not exists
         $parent = Folder::getByPath('/Users');
 
         if (!$parent) {
 
             $parent = new Folder();
-
             $parent->setKey('Users');
             $parent->setParentId(1);
-
             $parent->save();
         }
 
-        // =========================
-        // Create User Object
-        // =========================
+        // Create object
         $user = new Users();
 
         $user->setKey(
-            \Pimcore\Model\Element\Service::getValidKey(
+            ElementService::getValidKey(
                 $dto->mobile,
                 'object'
             )
         );
 
-        $user->setParentId($parent->getId());
+        $user->setParentId(
+            $parent->getId()
+        );
 
         $user->setPublished(true);
 
-        $user->setUserType($userType);
+        // Common Fields
+        $user->setFirstname(
+            $dto->firstname
+        );
 
-        // =========================
-        // Parent User
-        // =========================
-        if ($userType === 'parent') {
+        $user->setLastname(
+            $dto->lastname
+        );
 
-            $user->setChildFirstName(
-                $dto->childfirstname
-            );
+        $user->setGender(
+            $dto->gender
+        );
 
-            $user->setChildLastName(
-                $dto->childlastname
-            );
+        $user->setIAm(
+            $dto->i_am
+        );
 
-            $user->setMobile(
-                $dto->mobile
-            );
+        $user->setMobile(
+            $dto->mobile
+        );
 
-            $user->setEmail(
-                $dto->email
-            );
+        $user->setCity(
+            $dto->city
+        );
+
+        $user->setState(
+            $dto->state
+        );
+
+        $user->setSchoolName(
+            $dto->school_name
+        );
+
+        $user->setEmail(
+            $dto->email
+        );
+
+        // Child 1
+        $user->setChildOneFullname(
+            $dto->child_one_fullname
+        );
+
+        $user->setChildOneDob(
+            $dto->child_one_dob
+        );
+
+        // Child 2
+        $user->setChildTwoFullname(
+            $dto->child_two_fullname
+        );
+
+        $user->setChildtwodob(
+            $dto->child_two_dob
+        );
+
+        // Child 3
+        $user->setChildThreeFullname(
+            $dto->child_three_fullname
+        );
+
+        $user->setChildthreedob(
+            $dto->child_three_dob
+        );
+
+        $user->save();
+
+        return [
+            'success' => true,
+            'userId' => $user->getId(),
+            'firstname' => $dto->firstname,
+            'lastname' => $dto->lastname,
+            'email' => $dto->email,
+            'mobile' => $dto->mobile,
+            'i_am' => $dto->i_am
+        ];
+    }
+
+    public function update(
+    int $id,
+    UserDTO $dto
+    ): array {
+
+        $user = Users::getById($id);
+
+        if (!$user instanceof Users) {
+            throw new \Exception('User not found');
         }
 
-        // =========================
-        // Teacher User
-        // =========================
-        elseif ($userType === 'teacher') {
+        $user->setFirstname($dto->firstname);
+        $user->setLastname($dto->lastname);
+        $user->setEmail($dto->email);
+        $user->setMobile($dto->mobile);
+        $user->setGender($dto->gender);
+        $user->setState($dto->state);
+        $user->setCity($dto->city);
 
-            $user->setFirstName(
-                $dto->firstname
-            );
-
-            $user->setLastName(
-                $dto->lastname
-            );
-
-            $user->setTeachermobile(
-                $dto->mobile
-            );
-
-            $user->setTeacheremail(
-                $dto->email
-            );
+        // Optional fields
+        if (!empty($dto->schoolName)) {
+            $user->setSchoolName($dto->schoolName);
         }
 
-        // =========================
-        // School User
-        // =========================
-        elseif ($userType === 'school') {
-
-            $user->setSchoolName(
-                $dto->school_name
-            );
-
-            $user->setPOCcontactnumber(
-                $dto->mobile
-            );
-
-            $user->setPrincipalemail(
-                $dto->email
-            );
+        if (!empty($dto->childFirstName)) {
+            $user->setChildfirstname($dto->childFirstName);
         }
 
-        // =========================
-        // Password
-        // =========================
+        if (!empty($dto->childLastName)) {
+            $user->setChildlastname($dto->childLastName);
+        }
+
+        // Update password only if provided
         if (!empty($dto->password)) {
-
             $user->setPassword(
                 password_hash(
                     $dto->password,
@@ -161,16 +195,13 @@ class UserService
             );
         }
 
-        // =========================
-        // Save
-        // =========================
         $user->save();
 
         return [
-            'userId' => $user->getId(),
-            'userType' => $userType,
-            'mobile' => $dto->mobile,
-            'email' => $dto->email
+            'id' => $user->getId(),
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'email' => $user->getEmail(),
         ];
     }
 
@@ -178,21 +209,15 @@ class UserService
      * Login User
      */
     public function login(
-        string $email,
-        string $password
+        string $email
     ): Users {
 
         $list = new Users\Listing();
 
-        $list->setCondition('
-            email = ?
-            OR teacheremail = ?
-            OR principalemail = ?
-        ', [
-            $email,
-            $email,
-            $email
-        ]);
+        $list->setCondition(
+            'email = ?',
+            [$email]
+        );
 
         $list->setLimit(1);
 
@@ -201,16 +226,9 @@ class UserService
         $user = $users[0] ?? null;
 
         if (!$user) {
-            throw new \Exception('Invalid email');
-        }
-
-        if (
-            !password_verify(
-                $password,
-                $user->getPassword()
-            )
-        ) {
-            throw new \Exception('Invalid password');
+            throw new \Exception(
+                'User not found'
+            );
         }
 
         return $user;
