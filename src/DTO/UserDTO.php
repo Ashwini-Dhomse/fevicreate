@@ -13,7 +13,7 @@ class UserDTO
     public ?string $mobile = null;
     public ?string $city = null;
     public ?string $state = null;
-    public ?string $school_name = null;
+    public ?string $schoolname = null;
     public ?string $email = null;
 
     public ?string $child_one_fullname = null;
@@ -41,7 +41,7 @@ class UserDTO
         $dto->mobile = $data['mobile'] ?? null;
         $dto->city = $data['city'] ?? null;
         $dto->state = $data['state'] ?? null;
-        $dto->school_name = $data['school_name'] ?? null;
+        $dto->schoolname = $data['schoolname'] ?? null;
         $dto->email = $data['email'] ?? null;
 
         $dto->child_one_fullname = $data['child_one_fullname'] ?? null;

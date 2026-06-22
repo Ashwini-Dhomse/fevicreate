@@ -105,8 +105,8 @@ class UserService
             $dto->state
         );
 
-        $user->setSchoolName(
-            $dto->school_name
+        $user->setSchoolname(
+            $dto->schoolname
         );
 
         $user->setEmail(
@@ -164,35 +164,65 @@ class UserService
             throw new \Exception('User not found');
         }
 
-        $user->setFirstname($dto->firstname);
-        $user->setLastname($dto->lastname);
-        $user->setEmail($dto->email);
-        $user->setMobile($dto->mobile);
-        $user->setGender($dto->gender);
-        $user->setState($dto->state);
-        $user->setCity($dto->city);
-
-        // Optional fields
-        if (!empty($dto->schoolName)) {
-            $user->setSchoolName($dto->schoolName);
+        // Common Fields
+        if ($dto->firstname !== null) {
+            $user->setFirstname($dto->firstname);
         }
 
-        if (!empty($dto->childFirstName)) {
-            $user->setChildfirstname($dto->childFirstName);
+        if ($dto->lastname !== null) {
+            $user->setLastname($dto->lastname);
         }
 
-        if (!empty($dto->childLastName)) {
-            $user->setChildlastname($dto->childLastName);
+        if ($dto->gender !== null) {
+            $user->setGender($dto->gender);
         }
 
-        // Update password only if provided
-        if (!empty($dto->password)) {
-            $user->setPassword(
-                password_hash(
-                    $dto->password,
-                    PASSWORD_BCRYPT
-                )
-            );
+        if ($dto->i_am !== null) {
+            $user->setIAm($dto->i_am);
+        }
+
+        if ($dto->mobile !== null) {
+            $user->setMobile($dto->mobile);
+        }
+
+        if ($dto->city !== null) {
+            $user->setCity($dto->city);
+        }
+
+        if ($dto->state !== null) {
+            $user->setState($dto->state);
+        }
+
+        if ($dto->schoolname !== null) {
+            $user->setSchoolname($dto->schoolname);
+        }
+
+        if ($dto->email !== null) {
+            $user->setEmail($dto->email);
+        }
+
+        if ($dto->child_one_fullname !== null) {
+            $user->setChildOneFullname($dto->child_one_fullname);
+        }
+
+        if ($dto->child_one_dob !== null) {
+            $user->setChildOneDob($dto->child_one_dob);
+        }
+
+        if ($dto->child_two_fullname !== null) {
+            $user->setChildTwoFullname($dto->child_two_fullname);
+        }
+
+        if ($dto->child_two_dob !== null) {
+            $user->setChildtwodob($dto->child_two_dob);
+        }
+
+        if ($dto->child_three_fullname !== null) {
+            $user->setChildThreeFullname($dto->child_three_fullname);
+        }
+
+        if ($dto->child_three_dob !== null) {
+            $user->setChildthreedob($dto->child_three_dob);
         }
 
         $user->save();
@@ -202,6 +232,7 @@ class UserService
             'firstname' => $user->getFirstname(),
             'lastname' => $user->getLastname(),
             'email' => $user->getEmail(),
+            'schoolname' => $user->getSchoolName(),
         ];
     }
 
