@@ -101,6 +101,29 @@ class UserController extends AbstractController
     }
 
     /**
+     * Get User Details By ID
+     */
+    #[Route('/{id}', name: 'api_user_detail', methods: ['GET'])]
+    public function detail(int $id): JsonResponse
+    {
+        try {
+
+            $data = $this->service->getById($id);
+
+            return ApiResponse::success(
+                $data,
+                'User details fetched successfully'
+            );
+
+        } catch (\Exception $e) {
+
+            return ApiResponse::error(
+                $e->getMessage()
+            );
+        }
+    }
+    
+    /**
      * Login User
      */
     #[Route('/login', name: 'api_user_login', methods: ['POST'])]

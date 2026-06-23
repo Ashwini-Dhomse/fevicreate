@@ -237,6 +237,71 @@ class UserService
     }
 
     /**
+     * Get User By ID
+     */
+    public function getById(int $id): array
+    {
+        $user = Users::getById($id);
+
+        if (!$user instanceof Users) {
+            throw new \Exception('User not found');
+        }
+        $children = [];
+        if (
+            $user->getChildOneFullname() ||
+            $user->getChildOneDob()
+        ) {
+            $children[] = [
+                'childonefullname' => $user->getChildOneFullname(),
+                'dob' => $user->getChildOneDob(),
+            ];
+        }
+
+        if (
+            $user->getChildTwoFullname() ||
+            $user->getChildtwodob()
+        ) {
+            $children[] = [
+                'childtwofullname' => $user->getChildTwoFullname(),
+                'dob' => $user->getChildtwodob(),
+            ];
+        }
+
+        if (
+            $user->getChildThreeFullname() ||
+            $user->getChildthreedob()
+        ) {
+            $children[] = [
+                'childthreefullname' => $user->getChildThreeFullname(),
+                'dob' => $user->getChildthreedob(),
+            ];
+        }
+
+        return [
+            'id' => $user->getId(),
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'gender' => $user->getGender(),
+            'mobileNumber' => $user->getMobile(),
+            'state' => $user->getState(),
+            'city' => $user->getCity(),
+            'email' => $user->getEmail(),
+            'schoolName' => method_exists($user, 'getSchoolName')
+                ? $user->getSchoolName()
+                : null,
+            'children' => $children,    
+            'createdAt' => date(
+                'Y-m-d H:i:s',
+                $user->getCreationDate()
+            ),
+            'updatedAt' => date(
+                'Y-m-d H:i:s',
+                $user->getModificationDate()
+            ),
+        ];
+    }
+
+    /**
      * Login User
      */
     public function login(
