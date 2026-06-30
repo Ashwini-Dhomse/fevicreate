@@ -7,6 +7,7 @@ use App\Repository\ContestSubmissionRepository;
 use App\Transformer\ContestSubmissionTransformer;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\ContestSubmission;
+use Pimcore\Model\DataObject\Users;
 
 class ContestSubmissionService
 {
@@ -23,6 +24,12 @@ class ContestSubmissionService
 
     public function save(ContestSubmissionDTO $dto)
     {
+         $user = Users::getById($dto->userId);
+
+        if (!$user instanceof Users) {
+            throw new \Exception('User not found.');
+        }
+        
         $object = new ContestSubmission();
 
         $date = date('M Y');
@@ -33,7 +40,12 @@ class ContestSubmissionService
         $objectKey = 'contest_'.$dto->artworkTitle.'_'.rand(1, 999);
         $object->setKey($objectKey);
         $object->setParentId($contentDirectoryId);
+$user = Users::getById($dto->userId);
 
+if (!$user instanceof Users) {
+    throw new \Exception('User not found');
+}
+$object->setUser(DataObject\Users::getById($user->getId()));// Check what is returned
         $object->setChildName($dto->childName);
         $object->setParentEmail($dto->parentEmail);
         $object->setParentPhone($dto->parentPhone);

@@ -51,11 +51,14 @@ class ContestController extends AbstractController
                 'Submission successful',
             );
 
-        } catch (\Exception $e) {
-            return ApiResponse::error(
-                'Something went wrong from our side',
-            );
-        }
+        } catch (\Throwable $e) {
+    return $this->json([
+        'success' => false,
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine()
+    ], 500);
+}
     }
 
     #[Route('', name: 'api_contest_list', methods: ['GET'])]

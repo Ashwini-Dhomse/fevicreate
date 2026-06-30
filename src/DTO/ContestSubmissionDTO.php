@@ -15,6 +15,7 @@ class ContestSubmissionDTO
 
     public function __construct(array $data)
     {
+        $this->userId        = isset($data['userId']) ? (int) $data['userId'] : null;
         $this->childName     = $data['childName'] ?? '';
         $this->parentEmail   = $data['parentEmail'] ?? '';
         $this->parentPhone   = $data['parentPhone'] ?? null;
@@ -38,6 +39,10 @@ class ContestSubmissionDTO
     {
         $errors = [];
 
+        if (empty($this->userId)) {
+            $errors[] = 'User ID is required';
+        }
+        
         if (empty($this->childName)) {
             $errors[] = 'Child name is required';
         }
