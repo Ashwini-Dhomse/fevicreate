@@ -7,6 +7,7 @@
  * Fields Summary:
  * - childName [input]
  * - artworkTitle [input]
+ * - description [textarea]
  * - parentPhone [input]
  * - parentEmail [input]
  * - documents [manyToManyRelation]
@@ -20,7 +21,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1779431127,
+   'modificationDate' => 1782916907,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -136,6 +137,31 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'showCharCount' => false,
                  'width' => '',
                  'defaultValueGenerator' => '',
+              )),
+              2 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea::__set_state(array(
+                 'name' => 'description',
+                 'title' => 'Description',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'maxLength' => NULL,
+                 'showCharCount' => false,
+                 'excludeFromSearchIndex' => false,
+                 'height' => '',
+                 'width' => '',
               )),
             ),
              'locked' => false,
@@ -305,7 +331,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             array (
               0 => 
               array (
-                'classes' => 'User',
+                'classes' => 'Users',
               ),
             ),
              'displayMode' => 'grid',
@@ -381,6 +407,31 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'enableGridLocking' => false,
    'deletedDataComponents' => 
   array (
+    0 => 
+    \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea::__set_state(array(
+       'name' => 'discription',
+       'title' => 'Discription',
+       'tooltip' => '',
+       'mandatory' => false,
+       'noteditable' => false,
+       'index' => false,
+       'locked' => false,
+       'style' => '',
+       'permissions' => NULL,
+       'fieldtype' => '',
+       'relationType' => false,
+       'invisible' => false,
+       'visibleGridView' => false,
+       'visibleSearch' => false,
+       'blockedVarsForExport' => 
+      array (
+      ),
+       'maxLength' => NULL,
+       'showCharCount' => false,
+       'excludeFromSearchIndex' => false,
+       'height' => '',
+       'width' => '',
+    )),
   ),
    'blockedVarsForExport' => 
   array (
