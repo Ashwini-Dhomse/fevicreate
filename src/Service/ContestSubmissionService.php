@@ -50,6 +50,7 @@ $object->setUser(DataObject\Users::getById($user->getId()));// Check what is ret
         $object->setParentEmail($dto->parentEmail);
         $object->setParentPhone($dto->parentPhone);
         $object->setArtworkTitle($dto->artworkTitle);
+        $object->setDescription($dto->description);
 
         // Upload files
         $assets = [];

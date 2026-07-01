@@ -54,9 +54,7 @@ class ContestController extends AbstractController
         } catch (\Throwable $e) {
     return $this->json([
         'success' => false,
-        'message' => $e->getMessage(),
-        'file' => $e->getFile(),
-        'line' => $e->getLine()
+        'message' =>"Something went wrong"
     ], 500);
 }
     }

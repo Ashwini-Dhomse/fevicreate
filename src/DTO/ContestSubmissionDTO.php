@@ -20,6 +20,7 @@ class ContestSubmissionDTO
         $this->parentEmail   = $data['parentEmail'] ?? '';
         $this->parentPhone   = $data['parentPhone'] ?? null;
         $this->artworkTitle  = $data['artworkTitle'] ?? null;
+        $this->description   = $data['description'] ?? null;
         $this->documents     = $data['documents'] ?? [];
     }
 
@@ -43,45 +44,27 @@ class ContestSubmissionDTO
             $errors[] = 'User ID is required';
         }
         
-        if (empty($this->childName)) {
-            $errors[] = 'Child name is required';
-        }
-
-        if (empty($this->parentEmail) || !filter_var($this->parentEmail, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = 'Valid email is required';
-        }
-
-        if (empty($this->parentPhone)) {
-            $errors[] = 'Phone number is required';
-        }
-
-        if (empty($this->artworkTitle)) {
-            $errors[] = 'Artwork title is required';
-        }
-
         if (empty($this->documents)) {
-            $errors[] = 'At least one document is required';
-        }
+            foreach ($this->documents as $file) {
 
-        foreach ($this->documents as $file) {
+                if (!$file instanceof UploadedFile) {
+                    $errors[] = 'Invalid file upload';
+                    continue;
+                }
 
-            if (!$file instanceof UploadedFile) {
-                $errors[] = 'Invalid file upload';
-                continue;
-            }
+                if ($file->getSize() > 3 * 1024 * 1024) {
+                    $errors[] = 'File size must be less than 3MB';
+                }
 
-            if ($file->getSize() > 3 * 1024 * 1024) {
-                $errors[] = 'File size must be less than 3MB';
-            }
+                $mime = $file->getClientMimeType();
 
-            $mime = $file->getClientMimeType();
-
-            if (!in_array($mime, [
-                'application/pdf',
-                'image/jpeg',
-                'image/png'
-            ])) {
-                $errors[] = "Invalid file type ($mime)";
+                if (!in_array($mime, [
+                    'application/pdf',
+                    'image/jpeg',
+                    'image/png'
+                ])) {
+                    $errors[] = "Invalid file type ($mime)";
+                }
             }
         }
 
