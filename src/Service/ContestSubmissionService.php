@@ -45,7 +45,7 @@ $user = Users::getById($dto->userId);
 if (!$user instanceof Users) {
     throw new \Exception('User not found');
 }
-$object->setUser(DataObject\Users::getById($user->getId()));// Check what is returned
+        $object->setUser(DataObject\Users::getById($user->getId()));
         $object->setChildName($dto->childName);
         $object->setParentEmail($dto->parentEmail);
         $object->setParentPhone($dto->parentPhone);
@@ -65,7 +65,7 @@ $object->setUser(DataObject\Users::getById($user->getId()));// Check what is ret
         }
 
         $object->setDocuments($assets);
-
+        $object->setPublished(true);
         $object->save();
 
         return $object->getId();
@@ -94,5 +94,44 @@ $object->setUser(DataObject\Users::getById($user->getId()));// Check what is ret
         }
 
         return ContestSubmissionTransformer::detail($item);
+    }
+
+    /**
+     * Get contest submission list for a specific user.
+     *
+     * @param int $userId User Object ID
+     * @param int $page   Current page number
+     * @param int $limit  Number of records per page
+     *
+     * @return array
+     *
+     * @throws \Exception When user does not exist.
+     */
+    public function getByUser(int $userId, int $page = 1, int $limit = 10): array
+    {
+        // Verify user exists
+        $user = Users::getById($userId);
+
+        if (!$user instanceof Users) {
+            throw new \Exception('User not found.');
+        }
+
+        // Fetch contest submissions
+        $list = $this->repository->getByUser($userId, $page, $limit);
+
+        $data = [];
+
+        // Transform objects into API response
+        foreach ($list as $item) {
+            $data[] = ContestSubmissionTransformer::list($item);
+        }
+
+        return [
+            'userId' => $userId,
+            'total'  => $list->getTotalCount(),
+            'page'   => $page,
+            'limit'  => $limit,
+            'data'   => $data,
+        ];
     }
 }

@@ -84,4 +84,49 @@ class ContestController extends AbstractController
             return ApiResponse::error($e->getMessage());
         }
     }
+
+    /**
+     * Get contest submission list by user.
+     *
+     * Endpoint:
+     * GET /api/contest/user/{userId}
+     *
+     * Query Parameters:
+     * - page (optional)
+     * - limit (optional)
+     *
+     * @param int $userId
+     * @param Request $request
+     * @param ContestSubmissionService $service
+     *
+     * @return JsonResponse
+     */
+    #[Route('/user/{userId}', name: 'contest_by_user', methods: ['GET'])]
+    public function getContestByUser(
+        int $userId,
+        Request $request,
+        ContestSubmissionService $service
+    ): JsonResponse {
+        // Read pagination parameters
+        $page = (int) $request->query->get('page', 1);
+        $limit = (int) $request->query->get('limit', 10);
+
+        try {
+            // Fetch user's contest submissions
+            $result = $service->getByUser($userId, $page, $limit);
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Contest list fetched successfully.',
+                'data' => $result,
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+        'success' => false,
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+    ], 500);exit;
+        }
+    }
 }

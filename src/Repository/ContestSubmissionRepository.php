@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\ContestSubmission;
+use Pimcore\Model\DataObject\ContestSubmission\Listing;
 
 class ContestSubmissionRepository
 {
@@ -31,4 +32,31 @@ class ContestSubmissionRepository
     {
         return ContestSubmission::getById($id, ['force' => true]);
     }
+
+    /**
+     * Get contest submissions by user.
+     *
+     * @param int $userId User Object ID
+     * @param int $page   Current page number
+     * @param int $limit  Number of records per page
+     *
+     * @return Listing
+     */
+    public function getByUser(int $userId, int $page = 1, int $limit = 10): Listing
+        {
+            $list = new Listing();
+
+            // Filter submissions by user relation
+            $list->setCondition("user__id = ?", [$userId]);
+
+            // Show latest submissions first
+            $list->setOrderKey("creationDate");
+            $list->setOrder("DESC");
+
+            // Apply pagination
+            $list->setLimit($limit);
+            $list->setOffset(($page - 1) * $limit);
+
+            return $list;
+        }
 }
