@@ -44,7 +44,7 @@ class ContestSubmissionDTO
             $errors[] = 'User ID is required';
         }
         
-        if (empty($this->documents)) {
+        if (!empty($this->documents)) {
             foreach ($this->documents as $file) {
 
                 if (!$file instanceof UploadedFile) {
