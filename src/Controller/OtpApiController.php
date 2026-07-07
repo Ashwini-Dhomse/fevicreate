@@ -68,7 +68,7 @@ class OtpApiController
                 $this->apiResponse['status'] = 404;
                 $this->apiResponse['message'] = 'This number is not a registered user. Please edit the number or try logging in with a new one.';
                 $this->apiResponse['data'] = [
-                    'phonenumber' => $phoneNumber
+                    'mobile' => $phoneNumber
                 ];
 
                 return $this->sendApiResponse();
@@ -80,7 +80,7 @@ class OtpApiController
                 $this->apiResponse['status'] = 400;
                 $this->apiResponse['message'] = 'Error while sending OTP.';
                 $this->apiResponse['data'] = [
-                    'phonenumber' => $phoneNumber
+                    'mobile' => $phoneNumber
                 ];
             }
 
