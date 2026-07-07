@@ -62,34 +62,6 @@ class OtpApiController
             }
 
             /**
-             * 2️⃣ If not Parent → Check Teacher (teachermobile)
-             */
-            if (!$employee) {
-                $teacherList = new DataObject\Users\Listing();
-                $teacherList->setCondition('teachermobile = ?', [$phoneNumber]);
-                $teacherList->setLimit(1);
-                $teacher = $teacherList->getData();
-
-                if (!empty($teacher)) {
-                    $employee = $teacher[0];
-                }
-            }
-
-            /**
-             * 3️⃣ If not Teacher → Check School (POCcontactnumber)
-             */
-            if (!$employee) {
-                $schoolList = new DataObject\Users\Listing();
-                $schoolList->setCondition('POCcontactnumber = ?', [$phoneNumber]);
-                $schoolList->setLimit(1);
-                $school = $schoolList->getData();
-
-                if (!empty($school)) {
-                    $employee = $school[0];
-                }
-            }
-
-            /**
              * 4️⃣ If not found in all three
              */
             if (!$employee) {
@@ -102,7 +74,6 @@ class OtpApiController
                 return $this->sendApiResponse();
             }
 
-            //$employee = reset($employees);
             // Send OTP to customer
             $response = $this->sendOtp($phoneNumber, $employee->getId());
             if (!$response) {
@@ -116,115 +87,7 @@ class OtpApiController
             return $this->sendApiResponse();
         }
     }
-
-    /**
-     * @Route("/api/register", methods={"POST"})
-     */
-    public function registerAction(Request $request): JsonResponse
-    {
-        $contentType = $request->headers->get('Content-Type');
-
-        if (strpos($contentType, 'application/json') === false) {
-            $this->apiResponse['status'] = 400;
-            $this->apiResponse['message'] = 'Content-Type must be application/json';
-
-            return $this->sendApiResponse();
-        }
-
-        $data = json_decode($request->getContent(), true);
-        if (!$data) {
-            $this->apiResponse['status'] = 400;
-            $this->apiResponse['message'] = 'Invalid JSON';
-
-            return $this->sendApiResponse();
-        }
-
-        // Required Fields
-        if (empty($data['userType']) || empty($data['email']) || empty($data['mobile'])) {
-            $this->apiResponse['status'] = 400;
-            $this->apiResponse['message'] = 'userType, email, mobile are required';
-
-            return $this->sendApiResponse();
-        }
-
-        $userType = strtolower(trim($data['userType']));
-        $mobile   = trim($data['mobile']);
-        // $name     = trim($data['name']);
-        $email    = $data['email'] ?? null;
-
-        if (!in_array($userType, ['parent', 'teacher', 'school'])) {
-            $this->apiResponse['status'] = 400;
-            $this->apiResponse['message'] = 'Invalid userType. Allowed: parent, teacher, school';
-
-            return $this->sendApiResponse();
-        }
-
-        // Check if mobile exists in any field
-        $list = new DataObject\Users\Listing();
-        $list->setCondition('
-			mobile = ? OR teachermobile = ? OR POCcontactnumber = ? 
-			OR email = ? OR teacheremail = ? OR principalemail = ?
-		', [
-            $mobile, $mobile, $mobile,
-            $email, $email, $email
-        ]);
-        $list->setLimit(1);
-        if ($list->count() > 0) {
-            $this->apiResponse['status'] = 409;
-            $this->apiResponse['message'] = 'Mobile number or email already registered';
-
-            return $this->sendApiResponse();
-        }
-
-        // Create User
-        $user = new DataObject\Users();
-        $user->setKey(\Pimcore\Model\Element\Service::getValidKey($mobile, 'object'));
-        $user->setParentId(2);
-        $user->setUserType($userType);
-        //$user->setEmail($email);
-
-        if ($userType === 'parent') {
-            $user->setChildFirstName($data['childfirstname'] ?? '');
-            $user->setChildLastName($data['childlastname'] ?? '');
-            $user->setMobile($mobile);
-            $user->setEmail($email);
-        } elseif ($userType === 'teacher') {
-            $user->setFirstName($data['firstname'] ?? '');
-            $user->setLastName($data['lastname'] ?? '');
-            $user->setTeachermobile($mobile);
-            $user->setTeacheremail($email);
-        } elseif ($userType === 'school') {
-            $user->setSchoolName($data['school_name'] ?? '');
-            $user->setPOCcontactnumber($mobile);
-            $user->setPrincipalemail($email);
-        } else {
-            $this->apiResponse['status'] = 400;
-            $this->apiResponse['message'] = 'Invalid user type';
-
-            return $this->sendApiResponse();
-        }
-
-        $user->setPublished(true);
-
-        try {
-            $user->save();
-        } catch (\Exception $e) {
-            $this->apiResponse['status'] = 500;
-            $this->apiResponse['message'] = 'Registration failed';
-
-            return $this->sendApiResponse();
-        }
-
-        $this->apiResponse['message'] = 'Registration successful';
-        $this->apiResponse['data'] = [
-            'userId' => $user->getId(),
-            'userType' => $userType,
-            'mobile' => $mobile
-        ];
-
-        return $this->sendApiResponse();
-    }
-
+   
     /**
      *
      * @Route("/api/otp/validate")
@@ -263,33 +126,6 @@ class OtpApiController
                 $employee = $parent[0];
             }
 
-            /**
-             * 2️⃣ If not Parent → Check Teacher (teachermobile)
-             */
-            if (!$employee) {
-                $teacherList = new DataObject\Users\Listing();
-                $teacherList->setCondition('teachermobile = ?', [$phoneNumber]);
-                $teacherList->setLimit(1);
-                $teacher = $teacherList->getData();
-
-                if (!empty($teacher)) {
-                    $employee = $teacher[0];
-                }
-            }
-
-            /**
-             * 3️⃣ If not Teacher → Check School (POCcontactnumber)
-             */
-            if (!$employee) {
-                $schoolList = new DataObject\Users\Listing();
-                $schoolList->setCondition('POCcontactnumber = ?', [$phoneNumber]);
-                $schoolList->setLimit(1);
-                $school = $schoolList->getData();
-
-                if (!empty($school)) {
-                    $employee = $school[0];
-                }
-            }
 
             // Employee not found with given phone number
             if (!$employee) {
@@ -390,25 +226,16 @@ class OtpApiController
 
                 $db->executeQuery($insertQuery, $params);
             }
-
             $brandLabel = 'fevicol';
-
-            /*$salesGroupCode = trim($employee->getsalesGroupCode());
-
-            if(!empty($salesGroupCode)) {
-
-                $divisionData = DataObject\SalesDivisionMaster::getBysalesGroupCode($salesGroupCode);
-
-                foreach ($divisionData as $i => $divisionInfo) {
-                    $brandLabel = $divisionInfo->gethamburgerMenuCode();
-                }
-            }*/
 
             $this->deleteOtp($userData['id']);
             $this->apiResponse['message'] = 'OTP Validated successfully';
             $this->apiResponse['data'] = [
                 'customertoken' => $generatedToken,
-                'userType' => $employee->getuserType()
+                'id' => $employee->getId(),
+                'email' => $employee->getEmail(),
+                'firstname' => $employee->getFirstname(),
+                'lastname' => $employee->getLastname()                
             ];
 
             return $this->sendApiResponse();
@@ -490,7 +317,7 @@ class OtpApiController
 
         $template = urlencode('Dear User, '.$otp.' is OTP to login Jharokha app. Do not share OTP with anyone. Regards, Pidilite');
         $sender = 'FCCRTR';
-        $url = "http://japi.instaalerts.zone/httpapi/QueryStringReceiver?ver=1.0&key={$key}&encrpt=0&dest={$phoneNumber}&send={$sender}&text={$template}";
+        $url = "https://japi.instaalerts.zone/httpapi/QueryStringReceiver?ver=1.0&key={$key}&encrpt=0&dest={$phoneNumber}&send={$sender}&text={$template}";
 
         // CURL Request to send OTP
         try {
